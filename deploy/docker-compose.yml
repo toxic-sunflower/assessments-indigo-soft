@@ -1,0 +1,32 @@
+﻿version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: accesstracker-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-tracker}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_DB: ${DB_NAME:-accesstracker}
+    ports:
+      - "5433:5432"  # нестандартный внешний порт
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  accesstracker-api:
+    build:
+      context: ..  # предполагается запуск из папки deploy/
+      dockerfile: ./deploy/Dockerfile
+    container_name: accesstracker-api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=${DB_NAME:-accesstracker};Username=${DB_USER:-tracker};Password=${DB_PASSWORD:-secret}
+    ports:
+      - "5000:80"
+
+volumes:
+  pgdata:

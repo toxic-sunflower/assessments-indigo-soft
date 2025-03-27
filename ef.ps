@@ -1,0 +1,72 @@
+param (
+    [Parameter(Mandatory=$true)][string]$Command,
+    [string]$Arg1,
+    [string]$Arg2,
+    [switch]$Verbose
+)
+
+$ProjectDir = "src/Assessments.IndigoSoft.AccessTracker.Data.Migrator"
+$MigrationName = $null
+
+if ($Command -eq "mg-add") {
+    if (-not $Arg1) { Write-Host "Missing migration name"; exit 1 }
+    $MigrationName = $Arg1
+    if ($Arg2) { $ProjectDir = $Arg2 }
+} elseif ($Command -in @("mg-remove", "db-update", "db-revert")) {
+    if ($Arg1 -and $Arg1 -notlike "--*") {
+        if ($Command -eq "db-revert") {
+            $MigrationName = $Arg1
+            if ($Arg2) { $ProjectDir = $Arg2 }
+        } else {
+            $ProjectDir = $Arg1
+        }
+    } elseif ($Arg1 -eq "--full") {
+        $MigrationName = "0"
+    }
+} else {
+    Write-Host "Unknown command: $Command"
+    exit 1
+}
+
+Push-Location $ProjectDir
+
+switch ($Command) {
+    "mg-add" {
+        Write-Host "📦 Adding migration '$MigrationName'..."
+        if ($Verbose) {
+            dotnet ef migrations add $MigrationName
+        } else {
+            dotnet ef migrations add $MigrationName | Out-Null
+        }
+        Write-Host "✅ Migration added."
+    }
+
+    "mg-remove" {
+        Write-Host "❌ Removing last migration..."
+        dotnet ef migrations remove -f
+        Write-Host "✅ Migration removed."
+    }
+
+    "db-update" {
+        Write-Host "⏳ Updating database..."
+        dotnet ef database update
+        Write-Host "✅ Database updated."
+    }
+
+    "db-revert" {
+        if (-not $MigrationName) {
+            $list = dotnet ef migrations list
+            $lines = $list | Select-Object -Last 2
+            $MigrationName = ($lines[0] -split '\s+')[0]
+        }
+        if (-not $MigrationName) {
+            Write-Host "❌ No previous migration found."
+        } else {
+            Write-Host "↩️ Reverting to: $MigrationName"
+            dotnet ef database update $MigrationName
+            Write-Host "✅ Revert complete."
+        }
+    }
+}
+
+Pop-Location
