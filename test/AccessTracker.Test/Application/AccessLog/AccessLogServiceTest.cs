@@ -125,6 +125,6 @@ public class AccessLogServiceTest : TestBase<AccessLogService>
     }
     
     
-    private readonly Mock<IAccessLogLastAccessAccessLogAggregationRepository> _lastAccessAggregationRepository = new();
+    private readonly Mock<IAccessLogLastAccessAggregationRepository> _lastAccessAggregationRepository = new();
     private readonly Mock<IAccessLogUserIpLinkAccessLogAggregationRepository> _ipLinkAggregationRepository = new();
 }

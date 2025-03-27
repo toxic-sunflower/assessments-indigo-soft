@@ -43,6 +43,12 @@ public abstract class AccessLogAggregationUpdaterBase<TAggregation> :
         IReadOnlyList<AccessLogEntry> accessLogEntries,
         CancellationToken cancellationToken)
     {
+        if (accessLogEntries is [])
+        {
+            _logger.LogTrace("No events to aggregate");
+            return;
+        }
+        
         var aggregationType = _accessLogAggregationTypeMapper.GetAggregationType<TAggregation>();
         
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);

@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IStorage, Storage>();
         services.AddSingleton<IAccessLogRepository, AccessLogRepository>();
         services.AddSingleton<IAccessLogAggregationCheckpointRepository, AccessLogAggregationCheckpointRepository>();
-        services.AddSingleton<IAccessLogLastAccessAccessLogAggregationRepository, AccessLogLastAccessAccessLogAggregationRepository>();
+        services.AddSingleton<IAccessLogLastAccessAggregationRepository, AccessLogLastAccessAggregationRepository>();
         services.AddSingleton<IAccessLogUserIpLinkAccessLogAggregationRepository, AccessLogUserIpLinkAccessLogAggregationRepository>();
 
         return services;

@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 namespace AccessTracker.Data.Repositories;
 
 
-public class AccessLogLastAccessAccessLogAggregationRepository :
-    IAccessLogLastAccessAccessLogAggregationRepository
+public class AccessLogLastAccessAggregationRepository :
+    IAccessLogLastAccessAggregationRepository
 {
     private readonly IDbContextFactory<AccessTrackerDbContext> _dbContextFactory;
 
-    public AccessLogLastAccessAccessLogAggregationRepository(
+    public AccessLogLastAccessAggregationRepository(
         IDbContextFactory<AccessTrackerDbContext> dbContextFactory) =>
             _dbContextFactory = dbContextFactory;
 
@@ -21,13 +21,13 @@ public class AccessLogLastAccessAccessLogAggregationRepository :
     {
         await using var context = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
-        return await context.AccessLog
+        return await context.AccessLogLastAccessAggregations
             .Where(x => x.UserId == userId)
             .Select(x =>
                 new UserAccess(
                     x.UserId,
-                    x.Timestamp,
-                    x.IpAddress))
+                    x.LastAccessUtcTime,
+                    x.LastIpAddress))
             .SingleOrDefaultAsync(cancellationToken);
     }
 }

@@ -28,7 +28,7 @@ return;
 
 static (int, string) GenerateRecord(Random random)
 {
-    var userId = random.Next();
+    var userId = random.Next(1, 100);
     var ipAddress = $"192.168.{random.Next(1, 255)}.{random.Next(1, 255)}";
     
     return (userId, ipAddress);

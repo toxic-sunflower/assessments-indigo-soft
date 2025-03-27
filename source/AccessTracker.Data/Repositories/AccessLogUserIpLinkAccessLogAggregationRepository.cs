@@ -26,7 +26,6 @@ public class AccessLogUserIpLinkAccessLogAggregationRepository :
             .Where(x => x.UserId == userId);
         
         var items = await query
-            .Where(x => x.UserId == userId)
             .OrderBy(x => x.IpAddress)
             .Select(x => x.IpAddress)
             .Skip(skip)
@@ -38,8 +37,26 @@ public class AccessLogUserIpLinkAccessLogAggregationRepository :
         return (count, items);
     }
 
-    public Task<(long totalCount, IReadOnlyCollection<long> items)> SearchUsersByIpAddressAsync(string ipAddress, int skip, int take, CancellationToken cancellationToken)
+    public async Task<(long totalCount, IReadOnlyCollection<long> items)> SearchUsersByIpAddressAsync(
+        string ipAddress,
+        int skip,
+        int take,
+        CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+
+        var query = dbContext.AccessLogUserIpLinkAggregations
+            .Where(x => x.IpAddress.StartsWith(ipAddress));
+        
+        var items = await query
+            .OrderBy(x => x.IpAddress)
+            .Select(x => x.UserId)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+        
+        var count = await query.CountAsync(cancellationToken);
+        
+        return (count, items);
     }
 }

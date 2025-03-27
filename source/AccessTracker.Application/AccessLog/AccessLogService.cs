@@ -12,17 +12,17 @@ public class AccessLogService :
     IUserLastAccessProvider,
     IUserSearchService
 {
-    private readonly IAccessLogLastAccessAccessLogAggregationRepository _lastAccessAccessLogAggregationRepository;
+    private readonly IAccessLogLastAccessAggregationRepository _lastAccessAggregationRepository;
     private readonly IAccessLogUserIpLinkAccessLogAggregationRepository _userIpLinkAccessLogAggregationRepository;
     private readonly ILogger<AccessLogService> _logger;
 
 
     public AccessLogService(
-        IAccessLogLastAccessAccessLogAggregationRepository lastAccessAccessLogAggregationRepository,
+        IAccessLogLastAccessAggregationRepository lastAccessAggregationRepository,
         IAccessLogUserIpLinkAccessLogAggregationRepository userIpLinkAccessLogAggregationRepository,
         ILogger<AccessLogService> logger)
     {
-        _lastAccessAccessLogAggregationRepository = lastAccessAccessLogAggregationRepository;
+        _lastAccessAggregationRepository = lastAccessAggregationRepository;
         _userIpLinkAccessLogAggregationRepository = userIpLinkAccessLogAggregationRepository;
         _logger = logger;
     }
@@ -80,7 +80,7 @@ public class AccessLogService :
                 "Retrieving last access data for user {UserId}.",
                 userId);
             
-            var lastAccessOrNull = await _lastAccessAccessLogAggregationRepository
+            var lastAccessOrNull = await _lastAccessAggregationRepository
                 .GetByUserIdAsync(
                     userId,
                     cancellationToken);
