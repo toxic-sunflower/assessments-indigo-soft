@@ -23,9 +23,9 @@ public class AccessLogAggregationCheckpointUpdater : IAccessLogAggregationCheckp
                 })
             .On(x => x.AggregationType)
             .WhenMatched(
-                x => new AccessLogAggregationCheckpoint
+                (existing, incoming) => new AccessLogAggregationCheckpoint
                 {
-                    LastAggregatedEventId = x.LastAggregatedEventId
+                    LastAggregatedEventId = incoming.LastAggregatedEventId
                 })
             .RunAsync(cancellationToken);
     }

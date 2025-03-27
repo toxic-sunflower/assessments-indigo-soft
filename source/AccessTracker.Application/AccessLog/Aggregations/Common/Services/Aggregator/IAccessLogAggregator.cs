@@ -7,7 +7,4 @@ public interface IAccessLogAggregator
     Task AggregateAsync(CancellationToken cancellationToken);
 }
 
-public interface IAccessLogAggregator<TAggregation> : IAccessLogAggregator
-{
-    Type AggregationEntityType => typeof(TAggregation);
-}
+public interface IAccessLogAggregator<TAggregation> : IAccessLogAggregator;

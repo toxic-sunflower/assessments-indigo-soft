@@ -46,7 +46,7 @@ public class AccessLogUserIpLinksAggregationUpdater :
         
         await dbContext.AccessLogUserIpLinkAggregations
             .UpsertRange(aggregations)
-            .On(x => x.UserId)
+            .On(x => new {x.UserId, x.IpAddress})
             .NoUpdate()
             .RunAsync(cancellationToken);
     }

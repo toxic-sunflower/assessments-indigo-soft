@@ -33,7 +33,7 @@ public static class StartupExtensions
         this IServiceCollection services)
     {
         services.AddHostedService<MigrationService>();
-        //services.AddHostedService<AggregationService>();
+        services.AddHostedService<AggregationService>();
         
         return services;
     }

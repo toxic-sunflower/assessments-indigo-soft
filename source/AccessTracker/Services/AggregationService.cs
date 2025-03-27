@@ -1,7 +1,7 @@
-using AccessTracker.Application.AccessLog.Aggregations.Common.Services;
 using AccessTracker.Application.AccessLog.Aggregations.Common.Services.Aggregator;
 
 namespace AccessTracker.Services;
+
 
 public class AggregationService : BackgroundService
 {
@@ -17,11 +17,15 @@ public class AggregationService : BackgroundService
         
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<AggregationService>>();
         var aggregators = scope.ServiceProvider.GetServices<IAccessLogAggregator>();
-        
+
         try
         {
             var workers = GetWorkers(aggregators.ToList(), logger, stoppingToken);
             await Task.WhenAll(workers);
+        }
+        catch (TaskCanceledException)
+        {
+            
         }
         catch (Exception exception)
         {

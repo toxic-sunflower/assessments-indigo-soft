@@ -3,6 +3,7 @@ using System;
 using AccessTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AccessTracker.Data.Migrations
 {
     [DbContext(typeof(AccessTrackerDbContext))]
-    partial class AccessTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327051513_AddUniqueConstraintToLastAccesAggregation")]
+    partial class AddUniqueConstraintToLastAccesAggregation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,9 +60,6 @@ namespace AccessTracker.Data.Migrations
 
                     b.HasKey("AggregationType");
 
-                    b.HasIndex("AggregationType")
-                        .IsUnique();
-
                     b.ToTable("AccessLogAggregationCheckpoints", (string)null);
                 });
 
@@ -97,9 +97,6 @@ namespace AccessTracker.Data.Migrations
                         .HasColumnName("IpAddress");
 
                     b.HasKey("UserId", "IpAddress");
-
-                    b.HasIndex("UserId", "IpAddress")
-                        .IsUnique();
 
                     b.ToTable("AccessLogUserIpLinkAggregations", (string)null);
                 });

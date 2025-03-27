@@ -43,6 +43,10 @@ public class AccessLogAggregator<TAggregation> : IAccessLogAggregator<TAggregati
 
                 return;
             }
+            catch (TaskCanceledException)
+            {
+                return;
+            }
             catch (Exception exception)
             {
                 _logger.LogError(

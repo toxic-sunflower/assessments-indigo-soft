@@ -18,5 +18,7 @@ public class AccessLogAggregationCheckpointConfiguration : IEntityTypeConfigurat
 
         builder.Property(x => x.LastAggregatedEventId)
             .IsRequired();
+
+        builder.HasIndex(x => x.AggregationType).IsUnique();
     }
 }

@@ -12,9 +12,9 @@ public class AccessLogLastAccessAggregationConfiguration :
     {
         builder.ToTable("AccessLogLastAccessAggregations");
         builder.HasKey(x => x.UserId);
-        builder.Property(x => x.UserId).HasColumnName("UserId");
+        builder.Property(x => x.UserId).HasColumnName("UserId").ValueGeneratedNever();
         builder.Property(x => x.LastIpAddress).HasColumnName("IpAddress");
         builder.Property(x => x.LastAccessUtcTime).HasColumnName("LastAccessUtcTime");
-
+        builder.HasIndex(x => x.UserId).IsUnique();
     }
 }

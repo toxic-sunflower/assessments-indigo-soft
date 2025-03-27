@@ -49,12 +49,12 @@ public class AccessLogLastAccessAggregationUpdater :
         
         await dbContext.AccessLogLastAccessAggregations
             .UpsertRange(aggregations)
-            .On(x => x.UserId)
+            .On(x => new {x.UserId})
             .WhenMatched(
-                x => new AccessLogLastAccessAggregation
+                (existing, incoming) => new AccessLogLastAccessAggregation
                 {
-                    LastIpAddress = x.LastIpAddress,
-                    LastAccessUtcTime = x.LastAccessUtcTime
+                    LastIpAddress = incoming.LastIpAddress,
+                    LastAccessUtcTime = incoming.LastAccessUtcTime
                 })
             .RunAsync(cancellationToken);
     }

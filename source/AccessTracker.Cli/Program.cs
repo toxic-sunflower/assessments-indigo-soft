@@ -18,7 +18,7 @@ client.BaseAddress = new Uri(url);
 for (var i = 0; i < count; i++)
 {
     var (userId, ipAddress) = GenerateRecord(random);
-    await SendRecordAsync(client, url!, userId, ipAddress);
+    await SendRecordAsync(i, client, url!, userId, ipAddress);
 }
 
 Console.WriteLine("Done.");
@@ -35,6 +35,7 @@ static (int, string) GenerateRecord(Random random)
 }
 
 static async Task SendRecordAsync(
+    int iteration,
     HttpClient client,
     string url,
     long userId,
@@ -46,6 +47,6 @@ static async Task SendRecordAsync(
     var response = await client.PostAsync("/api/events", content);
 
     Console.WriteLine(response.IsSuccessStatusCode
-        ? $"Sent: {json}"
-        : $"Error ({(int)response.StatusCode}): {response.ReasonPhrase}");
+        ? $"[{iteration}] Sent: {json}"
+        : $"[{iteration}] Error ({(int)response.StatusCode}): {response.ReasonPhrase}");
 }

@@ -1,4 +1,3 @@
-using AccessTracker.Domain.AccessLog.Aggregations;
 using AccessTracker.Domain.AccessLog.Aggregations.UserIpLink;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,5 +13,6 @@ public class AccessLogUserIpLinkAggregationConfiguration :
         builder.HasKey(x => new {x.UserId, x.IpAddress});
         builder.Property(x => x.UserId).HasColumnName("UserId");
         builder.Property(x => x.IpAddress).HasColumnName("IpAddress");
+        builder.HasIndex(x => new {x.UserId, x.IpAddress}).IsUnique();
     }
 }
